@@ -1,0 +1,73 @@
+#include "main.h"
+/*****************************
+returns 1 if any of the triangle inequalities are not satisifed
+returns 0 if all traingles are satisfied.
+Steps: Start with edge with maximum weight say E(v1,v2)
+	Check the condition of triangle inequality with E and two dummy edges. // one Type A edge and two Type B edges
+
+	Check the condition of triangle inequality with E and another Type A edge and dummy edge. // two Type A edge and one Type B edges
+
+	Check the condition of triangle inequality with E and two Type A edges. // three Type A edges
+		return 1 at any step inequality doesnt satisfy
+		
+	To check for Type of edge - if the edge gets a hit in hash table then its a type A edge else Type B.
+*********************************/ 
+int checkTriangle(int a,int b,int c)
+{
+	if((a+b)>c&&(b+c)>a&&(a+c)>b)
+		return 0;
+	else
+		return 1;
+}
+
+int checkTriangleInequality(struct edge *sortedEdgeList,struct edgeHashTable *edgeHash)
+{
+	int i,v1,v2,wt,j;
+	int a,b,c;
+	struct edge *temp=(struct edge*)malloc(sizeof(struct edge));
+	struct edge *found;
+	if(numEdges==0)
+	{
+		return 2;
+	}
+	for(i=numEdges-1;i>=0;i--)
+	{
+		v1=sortedEdgeList[i].vertexId1;
+		v2=sortedEdgeList[i].vertexId2;
+		wt=sortedEdgeList[i].weight;
+		for(j=1;j<=numVertices;j++)
+		{
+			if(j!=v1&&j!=v2)
+			{
+				temp->vertexId1=j;
+				temp->vertexId2=v1;
+				temp->weight=0;
+				if((found=edgeHashSearch(edgeHash,temp))==NULL)
+				{
+					a=typeBWeight;			
+				}
+				else
+					a=found->weight;
+			
+				temp->vertexId1=v2;
+				temp->vertexId2=j;
+				temp->weight=0;
+				if((found=edgeHashSearch(edgeHash,temp))==NULL)
+				{
+					b=typeBWeight;
+				}
+				else
+					b=found->weight;
+			
+				c=wt;
+				if(checkTriangle(a,b,c)==1)
+				{
+					printf("\n%s %s %s does not form a triangle",vertices[v1],vertices[v2],vertices[j]);
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+		
+}

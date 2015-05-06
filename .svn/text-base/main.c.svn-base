@@ -1,0 +1,122 @@
+#include"main.h"
+void createBVertices(char **vertices)
+{
+	int countB,i;
+	char name[11],buffer[11];
+	printf("\nLast vertex id:%d",vertexId);
+	for(i=vertexId+1;i<=numVertices;i++)
+	{
+		sprintf(name,"%d",i);
+		strcpy(buffer,"VertexB:");
+		strcat(buffer,name);
+		strcpy(vertices[i],buffer);
+	}	
+}
+int main(int argc,char* argv[1])
+{
+	int i,maxEdges,mstWeight;
+	struct vertexHashTable *vertexHash;
+	struct edgeHashTable *edgeHash;
+
+	struct llVertexNode *tempVertex;
+	struct llEdgeNode *tempEdge;
+	struct edge *edges;
+	struct edge *mstedges;
+
+	if(argc!=2)
+	{
+		printf("\nFormat is : (executable) <input_file_name>");
+		exit(0);
+	}
+	
+	vertexHash=(struct vertexHashTable*)malloc(sizeof(struct vertexHashTable));
+	edgeHash=(struct edgeHashTable*)malloc(sizeof(struct edgeHashTable));
+
+	
+	vertexHashInit(vertexHash);
+	edgeHashInit(edgeHash);
+
+
+	vertices=(char**)malloc(100*sizeof(char*));
+	for(i=0;i<100;i++)
+	{
+		vertices[i]=(char*)malloc(sizeof(char)*30);
+	}
+	
+	if(parseInputDescription(argv[1],vertices,vertexHash,edgeHash)==-1)
+	{
+		printf("\nError in parsing...!");
+		exit(1);
+	}
+	printf("\nNumber of explicitly Specified Vertices:%d \nTotal number of vertices is %d \nNumber of TypeA edges is %d",numVertices,vertexId,numEdges);
+	
+
+	maxEdges=((numVertices)*(numVertices+1))/2;
+
+	printf("\nTraversing vertex Hash table:");
+	for(i=0;i<MAXBUCKETS;i++)
+	{
+		tempVertex=vertexHash->buckets[i];
+		while(tempVertex)
+		{
+			printf("\n%s \t%d",tempVertex->vertexInfo->vertexName,tempVertex->vertexInfo->vertexId);
+			tempVertex=tempVertex->next;
+		}
+	}
+	printf("\nTraversing edge hash Table:");
+	for(i=0;i<MAXBUCKETS;i++)
+	{
+		tempEdge=edgeHash->buckets[i];
+		while(tempEdge)
+		{
+			printf("\n%d\t%d\t%d",tempEdge->edgeInfo->vertexId1,tempEdge->edgeInfo->vertexId2,tempEdge->edgeInfo->weight);
+			tempEdge=tempEdge->next;
+		}
+	}
+
+	edges=(struct edge*)malloc(sizeof(struct edge)*numEdges);
+	mstedges=(struct edge*)malloc(sizeof(struct edge)*numEdges);
+
+	getArray(edgeHash,edges);
+	printf("\nTraversing edge array:");
+	for(i=0;i<numEdges;i++)
+	{
+		printf("\n%d\t%d\t%d",edges[i].vertexId1,edges[i].vertexId2,edges[i].weight);
+	}
+	createBVertices(vertices);
+	heapsort(edges,numEdges);
+	printf("\nTraversing edge array after heap sort(ascending order):");
+	for(i=0;i<numEdges;i++)
+	{
+		printf("\n%s \t%s \t%d",vertices[edges[i].vertexId1],vertices[edges[i].vertexId2],edges[i].weight);
+	}
+	printf("\nDescending order:");
+	for(i=numEdges-1;i>=0;i--)
+	{
+		printf("\n%s \t%s \t%d",vertices[edges[i].vertexId1],vertices[edges[i].vertexId2],edges[i].weight);
+	}
+	if(buildMinSpanningTree(edges,mstedges)==-1)
+	{
+		printf("\nCannot build minimum spanning tree!!");
+		
+	}
+	else
+	{
+		printf("\nNumber of edges in minimum spanning tree:%d",mstEdges);
+		printf("\nEdges in Minimum Spanning tree:");
+		mstWeight=0;
+		for(i=0;i<mstEdges;i++)
+		{
+			printf("\n%s %s %d",vertices[mstedges[i].vertexId1],vertices[mstedges[i].vertexId2],mstedges[i].weight);
+			mstWeight+=mstedges[i].weight;
+		}
+		printf("\nWeight of mst:%d",mstWeight);
+	
+	}
+	/*printf("\nVertices array:");
+	for(i=0;i<numVertices;i++)
+		printf("\n%s",vertices[i]);*/
+	//checkTriangleInequality(edges,edgeHash);
+	return 0;
+}
+

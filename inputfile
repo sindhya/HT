@@ -1,0 +1,7 @@
+num_vertices : 4
+(vertex1 vertex2) 2
+(vertex2 vertex3) 2
+(vertex1 vertex3) 2
+(vertex1 vertex4) 2
+(vertex2 vertex4) 2
+type B: 12

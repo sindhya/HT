@@ -1,0 +1,6 @@
+num_vertices : 5
+(vertex1 vertex5) 5
+(vertex3 vertex5) 7
+(vertex2 vertex5) 1
+(vertex4 vertex5) 8
+type B: 15

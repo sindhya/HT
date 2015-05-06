@@ -1,0 +1,12 @@
+num_vertices : 14
+(vertex1 vertex2) 12
+(vertex12 vertex8) 10
+(vertex10 vertex9) 18
+(vertex6 vertex14) 2
+(vertex13 vertex11) 15
+(vertex6 vertex10) 17
+(vertex13 vertex1) 13
+(vertex7 vertex2) 14
+(vertex4 vertex3) 1
+(vertex3 vertex5) 19
+type B: 500

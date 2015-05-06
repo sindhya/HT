@@ -1,0 +1,101 @@
+/*Function prototypes for minimum spanning tree*/
+
+
+/* Get the array of edges using getArray() function of hash.h
+   Sort the array using functions in heapsort.h
+   This function should create the minimum spanning tree using Kruskal's algorithm over the sorted list of type A 
+   edges and populate it in minSpanningTreeEdges. Return 0 on success and -1 on failure*/
+#include"main.h"
+
+int setValue[100];
+void makeSet(int i)
+{
+	setValue[i]=i;
+}
+
+int findSet(int i)
+{
+	return setValue[i];
+}
+void unionSet(int p,int q)
+{
+	int j;
+	for(j=1;j<=vertexId;j++)
+	{
+		if(setValue[j]==q)
+			setValue[j]=p;
+	}
+}
+int buildMinSpanningTree(struct edge *sortedEdgeList,struct edge *minSpanningTreeEdges)
+{
+	
+	int stIndex=0,i,j,k,value=0,lastval,component=0,count=0,prevsetValue;
+	int componentVertices[1000][1000];
+	int hit[1000]={0};
+
+
+	for(i=0;i<100;i++)
+		for(j=0;j<100;j++)
+			componentVertices[i][j]=0;
+	
+	for(i=0;i<1000;i++)
+		hit[i]=0;
+	for(i=1;i<=vertexId;i++)
+		makeSet(i);
+	for(i=0;i<numEdges;i++)
+	{
+		
+		if(findSet(sortedEdgeList[i].vertexId1)!=findSet(sortedEdgeList[i].vertexId2))
+		{
+			minSpanningTreeEdges[stIndex].vertexId1=sortedEdgeList[i].vertexId1;
+			minSpanningTreeEdges[stIndex].vertexId2=sortedEdgeList[i].vertexId2;
+			minSpanningTreeEdges[stIndex].weight=sortedEdgeList[i].weight;
+			
+			unionSet(setValue[sortedEdgeList[i].vertexId1],setValue[sortedEdgeList[i].vertexId2]);
+			stIndex++;
+			mstEdges++;
+			
+		}
+	}
+	j=0;
+	for(i=1;i<=vertexId;i++)
+	{
+		if(hit[setValue[i]])
+		{
+			j++;
+			componentVertices[setValue[i]][j]=i;
+		}
+		else
+		{
+			count++;
+			j=0;
+			componentVertices[setValue[i]][j]=i;
+			hit[setValue[i]]=1;
+		}
+	}
+	if(count==1)
+	{
+		printf("\nGraph is connected!");
+		return 0;
+	}
+	else
+	{
+		printf("\nGraph is Disconnected;No. of components:%d",count);
+		for(i=0;i<=100;i++)
+		{
+			if(componentVertices[i][0]==0)
+				continue;
+			++component;
+			printf("\nVertices in component %d : ",component);
+			for(k=0;k<100;k++)
+			{
+				if(componentVertices[setValue[i]][k]!=0)
+				printf("%s ",vertices[componentVertices[setValue[i]][k]]);
+				else
+				break;
+			}	
+		}
+		return -1;
+	}
+}
+

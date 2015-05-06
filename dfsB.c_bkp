@@ -1,0 +1,127 @@
+#include"main.h"
+void initialise_all_vertices(int *all_vertices)		// for initializing the array visited/not visited.
+{
+	//int *all_vertices;
+	
+	int i;
+	for(i=0;i<=numVertices;i++)
+	{
+		all_vertices[i]=0;		
+	}
+}
+
+void set_array_visited(int *all_vertices,int ver)						// Setting tag Visited/not visited.
+{
+	all_vertices[ver]=1;
+}
+
+int dfs_typeB(struct edgeHashTable *edgeHash)
+{
+	int i=0,j,ver;	
+	int v=1; 							// store vertex id of parent node.
+	int v_adjacent=-1; 						// store vertex id of adjacent node to v.
+	struct edge* edgeformed;
+	int *all_vertices;				// for creating edge from two vertices.
+	
+	all_vertices=(int *)malloc(sizeof(int)*numVertices);
+	edgeformed=(struct edge*)malloc(sizeof(struct edge));
+
+	SNode *head=(SNode *)malloc(sizeof(SNode));
+	struct edge *dfsEdges;
+	dfsEdges=(struct edge *)malloc(sizeof(struct edge)*(vertexId+1));			//Dummy edge for type B
+	struct tourVertex* tourver;
+
+        edgeformed=(struct edge *)malloc(sizeof(struct edge));
+    	
+        initialise_all_vertices(all_vertices);
+
+	int *dfs_typeB_list;
+	dfs_typeB_list=(int *)malloc(sizeof(int)*numVertices);
+
+	if(dfs_typeB_list==NULL) 
+	{
+		printf("Unable to Allocate Memory in dfs_typeB...!\n");
+		exit(1);
+	}
+	else
+	{
+
+		set_array_visited(all_vertices,v);		
+		push(&head,v);
+
+            	do
+		{
+            		if(v_adjacent==-1)
+			{
+				v=pop(&head);
+                          	j=1;
+                        }
+            		for(j=1;j<=numVertices;j++)
+			{
+          		        if(v==j && j<=numVertices-1)
+				{
+        				j++;        
+	                	}
+            			edgeformed->vertexId1 = v;
+	        		edgeformed->vertexId2 = j;
+        
+        	    		if(edgeHashSearch(edgeHash,edgeformed) == NULL) 
+				{
+		               			v_adjacent=j;
+			       	        	if(all_vertices[v_adjacent]==0)
+						{
+		                        	        set_array_visited(all_vertices,v_adjacent);		
+							push(&head,v_adjacent);
+        	                   //     		j=1;
+        	                        	        v=v_adjacent;
+							dfs_typeB_list[i]=v;
+							i++;
+						}    
+            			}
+        		}
+	
+			v_adjacent=-1;		
+
+		}while(isEmpty(head)==0);
+	}
+
+	// Creating an structure array of size ver(total number of type B vertices)
+	ver=i;
+	tourver=(struct tourVertex *)malloc(sizeof(struct tourVertex)*ver);
+
+	for(j=0;j<ver;j++)
+	{
+		if(j==0)
+			tourver[j].neighbor_id1=dfs_typeB_list[ver-1];
+		else
+			tourver[j].neighbor_id1=dfs_typeB_list[j-1];
+		
+		if(i==ver-1)
+			tourver[j].neighbor_id2=dfs_typeB_list[0];
+		else
+			tourver[j].neighbor_id2=dfs_typeB_list[j+1];	
+		
+	}
+
+	
+	printf("\nDFS Tour Type B:\n");
+	//printing DFS type B;
+	printf("\tDfsB: %d\tVertices:%d",i+1,numVertices);
+	if(numVertices!=(i+1))
+		return 0;		// Graph is disconnected.
+	else
+	{
+		for(j=0;j<i-1;j++)
+		{
+			printf("%s %s\n",vertices[dfs_typeB_list[j]],vertices[dfs_typeB_list[j+1]]);
+		}
+		printf("%s %s\n",vertices[dfs_typeB_list[i-1]],vertices[dfs_typeB_list[0]]);
+/*		printf("\nOptimized DFS Type B tour: ");
+		printf("\n***************************\n");
+		optimize_tourB(edgeHash,dfsEdges,tourver);*/
+		return 1;
+	}	
+	
+}
+
+

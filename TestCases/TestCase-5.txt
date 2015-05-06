@@ -1,0 +1,8 @@
+num_vertices : 4
+(A B) 20
+(B C) 20
+(C D) 20
+(D A) 20
+(A C) 25
+(B D) 39
+type B: 10

@@ -1,0 +1,135 @@
+#include<stdio.h>
+#include<stdlib.h>
+//#include"heapsort.h"
+/* Function to create max / descending heap as required
+   edges - pointer to array of edges
+*/
+
+struct edge
+{
+       int vertexId1;
+       int vertexId2;
+       int weight;
+};
+
+/*int heapSize(struct edge *e)
+{
+int size=0;
+while((e+(sizeof(struct edge))) != NULL) size++;
+return size;
+}
+*/
+void max_heapify(struct edge *edges , int index, int numEdges)
+{
+// indeces of left and right children of the array
+struct edge temp;
+int left=2*index+1;
+int right = 2*index+2;
+int largest = index;
+int size=numEdges;
+
+if((left<size) && ((edges[left].weight) > (edges[index].weight)))
+                largest=left;
+if((right<size) && ((edges[right].weight) > (edges[largest].weight)))
+                largest=right;
+if(largest!=index)
+	{
+	//exchange(edges[index],edges[largest]);
+	/*     temp.vertexId1=edges[index].vertexId1;
+	     temp.vertexId2=edges[index].vertexId2;
+	     temp.weight=edges[index].weight;
+	     
+	     edges[index].vertexId1= edges[largest].vertexId1;
+	     edges[index].vertexId2= edges[largest].vertexId2;
+	     edges[index].weight= edges[largest].weight;
+	     
+	     edges[largest] = temp;*/
+		temp=edges[largest];
+		edges[largest]=edges[index];
+		edges[index]=temp;
+	    
+	
+max_heapify(edges , largest, numEdges);
+}
+}
+// function to build the heap
+void build_heap(struct edge *edges , int numEdges)
+{
+     	int i;
+	for(i=numEdges/2-1;i>=0;i--)
+ 	{
+		max_heapify(edges , i, numEdges);
+	}
+}
+
+/*Function to perform heap sort i.e call heapify and recreate_heap from here . 
+   edges - pointer to array of edges
+Return 0 on success and -1 on failure*/
+int heapsort(struct edge *edges , int numEdges)
+{
+    struct edge temp;			//=(struct edge*)malloc(sizeof(struct edge));
+    int i;
+    build_heap(edges , numEdges);
+    for(i=numEdges-1;i>=1;i--)
+	{
+	temp=edges[0];
+	edges[0] = edges[i];
+	edges[i]= temp;
+	numEdges=numEdges-1;
+	max_heapify(edges ,0, numEdges);
+	}
+return 1;
+}
+
+
+int main()
+{
+int i;
+struct edge arr[10];
+arr[0].vertexId1= 6;
+arr[0].vertexId2= 1;
+arr[0].weight =  5 ;
+
+arr[1].vertexId1= 1;
+arr[1].vertexId2= 2;
+arr[1].weight =   8;
+
+arr[2].vertexId1= 2;
+arr[2].vertexId2= 3;
+arr[2].weight =   2;
+
+arr[3].vertexId1= 3;
+arr[3].vertexId2= 4;
+arr[3].weight =   9;
+
+arr[4].vertexId1= 5;
+arr[4].vertexId2= 6;
+arr[4].weight =   12;
+
+arr[5].vertexId1= 7;
+arr[5].vertexId2= 8;
+arr[5].weight =   1;
+
+arr[6].vertexId1= 9;
+arr[6].vertexId2= 8;
+arr[6].weight =   3;
+
+arr[7].vertexId1= 10;
+arr[7].vertexId2= 11;
+arr[7].weight =   6;
+
+arr[8].vertexId1= 11;
+arr[8].vertexId2= 12;
+arr[8].weight =   4;
+
+arr[9].vertexId1= 35;
+arr[9].vertexId2= 55;
+arr[9].weight =   7;
+
+heapsort(arr , 10);
+
+for(i=0;i<10;i++)
+printf("vertexId1=%d\nvertexId2=%d\nWeight=%d\n", arr[i].vertexId1,arr[i].vertexId2, arr[i].weight);
+return 1;
+}
+

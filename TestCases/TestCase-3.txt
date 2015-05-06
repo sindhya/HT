@@ -1,0 +1,9 @@
+num_vertices : 6
+(v1 v2) 2
+(v2 v3) 5
+(v1 v4) 40
+(v2 v4) 8
+(v3 v4) 15
+(v4 v5) 20
+(v5 v6) 30
+type B: 10
