@@ -1,4 +1,5 @@
 #include "main.h"
+/* Test branching */
 /*****************************
 returns 1 if any of the triangle inequalities are not satisifed
 returns 0 if all traingles are satisfied.
